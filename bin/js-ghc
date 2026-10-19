@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#--------------------------------------------------------
+# Comproba la validesa del fitxer de codi font a compilar
+
+if test "$#" != 1; then
+  echo "S'espera 1 argument (el nom del fitxer font Haskell)" >&2
+  exit 1
+fi
+
+filename="$1"
+
+if test ! -f "$filename"; then
+  echo "El fitxer '$filename' no existeix" >&2
+  exit 1
+fi
+
+app="${filename%.*}"
+
+if test "${filename##*.}" != "hs"; then
+  echo "'$filename' no té el sufix '.hs' (no sembla codi font Haskell). Compilació abortada!" >&2
+  exit 1
+fi
+
+if test -e "$app" -o -e "$app.o" -o -e "$app.hi"; then
+  echo "La compilació sobreescriuria fitxers existents. Compilació abortada!" >&2
+  exit 1
+fi
+
+#--------------------------------------------------------
+# Compila el fitxer de codi font
+
+prjdir=$(cd $(dirname $0)/..; pwd)
+
+$prjdir/bin/js-cabal exec ghc "$app.hs"
+ecode=$?
+
+rm "$app" "$app.o" "$app.hi"
+
+if test "$ecode" != 0; then
+  exit "$ecode"
+fi
+
+echo "Compilació finalitzada:"
+echo "    Obriu amb el navegador la pàgina '$app.jsexe/index.html'"
+

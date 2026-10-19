@@ -1,0 +1,218 @@
+cabal-version: 3.0
+
+name:           fluid
+version:        0.1.0.0
+--- description:    Please see the README on GitHub at <https://github.com/githubuser/drawing#readme>
+author:         Jordi Forga Alberich
+maintainer:     jordi.forga@upc.edu
+copyright:      2025 Jordi Forga-Alberich
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+
+flag old-vdom
+  description: Use old VDOM 'miso2-vdom'
+  default: False
+  manual: True
+
+flag direct-monad
+  description: Use a direct monad EvalM
+  default: False
+  manual: True
+
+library
+  exposed-modules:
+      Fluid.App
+      Fluid.App.Driver
+      Fluid.App.Driver.Model
+      Fluid.App.Driver.View
+
+      Fluid
+      Fluid.Component
+      Fluid.Query
+      Fluid.Query.EvalM
+      Fluid.Query.Event
+      Fluid.Query.FluidQ
+      Fluid.Subscription
+      Fluid.Html
+      Fluid.Html.Core
+      Fluid.Html.Elements
+      Fluid.Html.Parser
+      Fluid.Html.Properties
+      Fluid.Html.Events
+      Fluid.Svg
+      Fluid.Console
+      Fluid.Random
+      Fluid.Router
+
+      Fluid.Utils.Conc
+      Fluid.Utils.Log
+      Fluid.Utils.NT
+      Fluid.Utils.Slot
+      Fluid.Utils.StableNamed
+      Fluid.Utils.UUID
+
+  hs-source-dirs:
+    src
+  build-depends:
+    base >=4.7 && <5,
+    bytestring,
+    containers,
+    dlist,
+    html-parse,
+    http-types,
+    mtl,
+    profunctors,
+    random,
+    row-types,
+    stm,
+    text,
+    time,
+    uuid-types,
+    web-apis >=0.2.1 && <0.3
+
+  if flag(old-vdom)
+      build-depends:
+        miso2-vdom >=0.4 && <0.5
+      cpp-options:
+        -DOLD_VDOM
+  else
+      build-depends:
+        hvdom >=0.1 && <0.2
+
+
+  if flag(direct-monad)
+      cpp-options:
+        -DDIRECT_MONAD
+  else
+      build-depends:
+        free
+
+  default-language:
+    Haskell2010
+  default-extensions:
+    DataKinds
+    DeriveFunctor
+    ExistentialQuantification
+    FlexibleContexts
+    GADTs
+    GeneralisedNewtypeDeriving
+    OverloadedStrings
+    RankNTypes
+    RecordWildCards
+    ScopedTypeVariables
+    TypeFamilies
+    TypeSynonymInstances
+
+  if impl(ghcjs) || arch(javascript)
+    cpp-options:
+      -DGHCJS_BOTH
+
+executable fluid-sub
+  main-is:          sub.hs
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    containers,
+    fluid,
+    text,
+    web-apis
+  default-language: Haskell2010
+
+executable fluid-counter-simple
+  main-is:          counter-simple.hs
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    text
+  default-language: Haskell2010
+
+executable fluid-counter-comp
+  main-is:          counter-comp.hs
+  other-modules:    Button
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    row-types,
+    text
+  default-language: Haskell2010
+
+executable fluid-button-list
+  main-is:          button-list.hs
+  other-modules:    Button
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    row-types,
+    text
+  default-language: Haskell2010
+
+executable fluid-button-list-lang
+  main-is:          button-list-lang.hs
+  other-modules:    Button
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    row-types,
+    text
+  default-language: Haskell2010
+
+executable fluid-many-comps
+  main-is:          many-comps.hs
+  other-modules:    Button
+                    ValueEditor
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    row-types,
+    text
+  default-language: Haskell2010
+
+executable fluid-fetch
+  main-is:          fetch.hs
+  hs-source-dirs:   samples
+  build-depends:
+    aeson,
+    base >=4.7 && <5,
+    fluid,
+    text,
+    vector,
+    web-apis
+  default-language: Haskell2010
+
+executable fluid-fetch-parse
+  main-is:          fetch-parse.hs
+  hs-source-dirs:   samples
+  build-depends:
+    aeson,
+    base >=4.7 && <5,
+    fluid,
+    text,
+    vector,
+    web-apis
+  default-language: Haskell2010
+
+executable fluid-router
+  main-is:          router.hs
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    fluid,
+    text
+  default-language: Haskell2010
+
+executable fluid-show-event
+  main-is:          show-event.hs
+  hs-source-dirs:   samples
+  build-depends:
+    base >=4.7 && <5,
+    containers,
+    fluid,
+    web-apis
+  default-language: Haskell2010
+

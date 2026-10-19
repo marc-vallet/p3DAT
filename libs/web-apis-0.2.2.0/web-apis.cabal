@@ -1,0 +1,122 @@
+cabal-version: 3.0
+
+name:           web-apis
+version:        0.2.2.0
+--- description:    Please see the README on GitHub at <https://github.com/githubuser/drawing#readme>
+author:         Jordi Forga Alberich
+maintainer:     jordi.forga@upc.edu
+copyright:      2025 Jordi Forga-Alberich
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+
+library
+  if arch(javascript) || impl(ghcjs)
+    cpp-options:
+      -DGHCJS_BOTH
+    js-sources:
+      js/dsl.js
+      js/fetch.js
+      js/random.js
+  if impl(ghcjs)
+    cpp-options:
+      -DGHCJS_OLD
+  elif arch(javascript)
+    cpp-options:
+      -DGHCJS_NEW
+  elif arch(wasm32)
+    cpp-options:
+      -DWASM
+  else
+    cpp-options:
+      -DVANILLA
+
+  exposed-modules:
+      Web.Console
+      Web.DOM.Document
+      Web.DOM.Element
+      Web.DOM.Internal.Types
+      Web.DOM.Node
+      Web.DOM.ParentNode
+      Web.Event.Event
+      Web.Event.EventTarget
+      Web.Event.Internal.Types
+      Web.Fetch
+      Web.Fetch.Request
+      Web.Fetch.Response
+      Web.FFI.DSL
+      Web.FFI.Types
+      Web.HTML.Common
+      Web.HTML.Event.PopStateEvent
+      Web.HTML.HTMLDocument
+      Web.HTML.History
+      Web.HTML.Location
+      Web.HTML.Window
+      Web.IDL.Promise
+      Web.Random
+      Web.UIEvent.KeyboardEvent
+      Web.UIEvent.MouseEvent
+      Web.UIEvent.PointerEvent
+      Web.UIEvent.UIEvent
+
+  -- FFI declarations
+  if arch(javascript) || impl(ghcjs)
+    hs-source-dirs:
+      ffi/js
+  elif arch(wasm32)
+    hs-source-dirs:
+      ffi/wasm
+  else
+    hs-source-dirs:
+      ffi/ghc
+
+  hs-source-dirs:
+    src
+
+  build-depends:
+    aeson,
+    base >=4.7 && <5,
+    text,
+    vector
+
+  default-extensions:
+    GeneralizedNewtypeDeriving
+    OverloadedStrings
+
+  default-language:
+    Haskell2010
+
+executable test-dom
+  if !arch(javascript) && !impl(ghcjs)
+    buildable: False
+  main-is:
+    test/test-dom.hs
+  build-depends:    
+    base >= 4.7 && <5,
+    web-apis
+  default-language:
+    Haskell2010
+
+executable test-random
+  main-is:
+    test/test-random.hs
+  build-depends:
+    base >=4.7 && <5,
+    web-apis,
+    text
+  default-language:
+    Haskell2010
+
+executable test-js
+  if !arch(javascript) && !impl(ghcjs)
+    buildable: False
+  main-is:
+    test/test-js.hs
+  js-sources:
+    test/test.js
+  build-depends:
+    base >=4.7 && <5,
+    web-apis
+  default-language:
+    Haskell2010
+

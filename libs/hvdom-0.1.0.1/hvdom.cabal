@@ -1,0 +1,98 @@
+cabal-version:      3.0
+
+name:               hvdom
+version:            0.1.0.1
+synopsis:           Haskell port of purescript-halogen-vdom library
+license:            Apache-2.0
+license-file:       LICENSE
+category:           Web
+extra-source-files: NOTICE
+
+flag trace-dom
+  description: Enable tracing of DOM operations
+  default: False
+  manual: True
+
+common commons
+  if arch(javascript) || impl(ghcjs)
+    cpp-options:
+      -DGHCJS_BOTH
+  if impl(ghcjs)
+    cpp-options:
+      -DGHCJS_OLD
+  elif arch(javascript)
+    cpp-options:
+      -DGHCJS_NEW
+  elif arch(wasm32)
+    cpp-options:
+      -DWASM
+  else
+    cpp-options:
+      -DVANILLA
+
+  build-depends:    
+    base >=4.16 && <5,
+    containers,
+    profunctors,
+    text,
+    web-apis >=0.2 && <0.3
+
+  default-language:
+    GHC2021
+  ghc-options:
+    -Wall -Wextra -Wcompat -Wno-partial-type-signatures -Wterm-variable-capture
+
+  default-extensions:
+    OverloadedStrings
+    LambdaCase
+    StrictData
+    GADTs
+    RecordWildCards
+    DuplicateRecordFields
+    OverloadedRecordDot
+    NoFieldSelectors
+    NamedFieldPuns
+
+library
+    import: commons
+
+    exposed-modules:
+      HVDom
+      HVDom.DOM
+      HVDom.DOM.Prop
+      HVDom.Machine
+      HVDom.Utils
+      HVDom.Thunk
+      HVDom.Types
+
+    hs-source-dirs: src
+
+    if arch(javascript)
+      js-sources:
+        jsbits/monad_dom.js
+
+      ghc-options:
+        -fexpose-all-unfoldings
+
+executable hvdom-prototype
+  import: commons
+  main-is:          prototype.hs
+  hs-source-dirs:   app
+  build-depends:    hvdom
+  if arch(javascript)
+    js-sources:
+      app/prototype.js
+
+executable hvdom-counter
+  import: commons
+  main-is:          counter.hs
+  hs-source-dirs:   app
+  build-depends:    hvdom
+
+test-suite Halogen-vdom-test
+  import: commons
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Test.hs
+  build-depends:    protolude, hvdom, hspec
+

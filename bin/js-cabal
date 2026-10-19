@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Invoca cabal amb les opcions necessaries per a usar
+# el compilador de Haskell cap a JavaScript.
+
+cabal --with-compiler=javascript-unknown-ghcjs-ghc \
+      --with-ghc-pkg=javascript-unknown-ghcjs-ghc-pkg \
+      "$@"
+

@@ -1,0 +1,16 @@
+
+packages:
+  life
+  --web-handler
+  --forums-app
+  --forums-backend
+  --forums-frontend
+
+  libs/datfw-core-0.2.2.0
+  libs/drawing-core-0.2.0.1
+  libs/drawing-activity-0.6.0.0
+  libs/http-serve-0.2.0.0
+  libs/fluid-0.1.0.0
+  libs/hvdom-0.1.0.1
+  libs/web-apis-0.2.2.0
+
