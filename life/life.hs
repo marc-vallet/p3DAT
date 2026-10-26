@@ -1,3 +1,4 @@
+-- Marc Vallet
 
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -46,6 +47,14 @@ keyMap :: T.Text -> Maybe Action
 keyMap "N" = Just NextStep
 keyMap _   = Nothing
 
+-- Prova de la tecla que avanca una generacio.
+-- Comanda des del directori life: make dbg-repl
+-- ghci> :set -XOverloadedStrings
+-- ghci> keyMap "n"
+-- Just NextStep
+-- ghci> keyMap "X"
+-- Nothing
+
 update :: Action -> UpdateM Game Action ()
 update NextStep =               -- Next generation
     modify $
@@ -58,6 +67,11 @@ update (SetCell point) =  do    -- Set live/dead cells
 
 pointToPos :: Point -> Pos
 pointToPos (x, y) = (round x, round y)
+
+-- Prova de conversio de les coordenades del ratoli a una cel.lula.
+-- Comanda dins de la mateixa sessio de GHCi:
+-- ghci> pointToPos (2.49, -1.51)
+-- (2,-2)
 
 -----------------------------------------------------
 -- View state

@@ -1,3 +1,4 @@
+-- Marc Vallet
 
 module Life.Draw where
 import Life.Board
@@ -6,7 +7,31 @@ import Drawing
 drawBoard :: Board -> Drawing
 drawBoard board =
     -- A completar per l'estudiant
-    ...
+    drawLiveCells board <> drawGrid (minLiveCell board) (maxLiveCell board)
+
+-- Converteix totes les cel.lules vives del tauler en un sol dibuix.
+drawLiveCells :: Board -> Drawing
+drawLiveCells board =
+    foldMap drawLiveCell (liveCells board)
+
+-- Dibuixa una cel.lula viva com un quadrat negre d'una unitat de costat.
+drawLiveCell :: Pos -> Drawing
+drawLiveCell (col, row) =
+    translated (fromIntegral col, fromIntegral row) $
+        colored black $ solidRectangle 1 1
+
+-- Proves relacionades amb drawLiveCell i drawBoard.
+-- Comanda des del directori life: make dbg-repl
+-- ghci> drawLiveCell (3, -2) == translated (3, -2) (colored black (solidRectangle 1 1))
+-- True
+-- ghci> let provaMarc = foldr (setCell True) initBoard [(3, -2), (3, -1), (3, 0)]
+-- ghci> drawBoard provaMarc == (foldMap drawLiveCell (liveCells provaMarc) <> drawGrid (minLiveCell provaMarc) (maxLiveCell provaMarc))
+-- True
+-- Prova visual: make build
+-- Resultat esperat: la compilacio acaba sense errors i crea life/public/all.js.
+-- Comanda seguent: make serve
+-- Resultat esperat: el navegador mostra les cel.lules vives com quadrats negres
+-- i una graella grisa que cobreix el rectangle delimitat pel tauler.
 
 -- 'drawGrid minPos maxPos' obte el dibuix d'una graella que inclou els 2 extrems indicats.
 -- 'minPos' es la posicio de l'extrem (esquerra, inferior) i

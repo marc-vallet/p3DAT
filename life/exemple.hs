@@ -1,3 +1,4 @@
+-- Marc Vallet
 
 module Main where
 import Drawing.Activity

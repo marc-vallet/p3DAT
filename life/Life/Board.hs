@@ -1,3 +1,4 @@
+-- Marc Vallet
 
 -- This module defines a model for the board of 'The Game of Life'
 
@@ -92,6 +93,16 @@ neighborPositions (col, row) =
     [ (col + 1, row), (col + 1, row + 1), (col, row + 1), (col - 1, row + 1)
     , (col - 1, row), (col - 1, row - 1), (col, row - 1), (col + 1, row - 1)
     ]
+
+-- Prova personalitzada del model amb un oscil.lador vertical desplacat.
+-- Comanda des del directori life: make dbg-repl
+-- ghci> let provaMarc = foldr (setCell True) initBoard [(3, -2), (3, -1), (3, 0)]
+-- ghci> liveCells provaMarc
+-- [(3,-2),(3,-1),(3,0)]
+-- ghci> liveCells (nextGeneration provaMarc)
+-- [(2,-1),(3,-1),(4,-1)]
+-- El resultat esperat es una fila horitzontal: confirma les regles de supervivencia
+-- i de naixement del joc de la vida sense modificar cap funcio prefabricada.
 
 ---------------------------------------------------
 -- JSON representation
